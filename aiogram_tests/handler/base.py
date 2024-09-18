@@ -22,8 +22,8 @@ from aiogram_tests.types.dataset import USER
 class RequestHandler:
     def __init__(
         self,
-        dp_middlewares: Iterable[BaseMiddleware] = None,
-        exclude_observer_methods: Iterable[str] = None,
+        dp_middlewares: Iterable[BaseMiddleware] = [],
+        exclude_observer_methods: Iterable[str] = [],
         auto_mock_success: bool = False,
         dp: Optional[Dispatcher] = None,
         **kwargs,
@@ -42,10 +42,6 @@ class RequestHandler:
         dispatcher_methods = self._get_dispatcher_event_observers()
         available_methods = tuple(set(dispatcher_methods) - set(exclude_observer_methods))
         self._register_middlewares(available_methods, tuple(dp_middlewares))
-
-        Bot.set_current(self.bot)
-        User.set_current(USER.as_object())
-        Chat.set_current(CHAT.as_object())
 
     def _get_dispatcher_event_observers(self) -> List[str]:
         """
@@ -79,7 +75,7 @@ class RequestHandler:
         retry_after: Optional[int] = None,
     ) -> Response[TelegramType]:
         response = self.bot.add_result_for(
-            method=method,
+            method=method, # type: ignore
             ok=ok,
             result=result,
             description=description,

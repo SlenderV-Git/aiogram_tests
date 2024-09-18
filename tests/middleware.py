@@ -8,7 +8,7 @@ from aiogram.types import Message
 
 
 class TestMiddleware(BaseMiddleware):
-    async def __call__(
+    async def __call__( # type: ignore
         self, handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]], event: Message, data: Dict[str, Any]
     ):
         return await handler(event, data)

@@ -41,10 +41,10 @@ async def message_handler_with_state_data(message: types.Message, state: FSMCont
 
 @dp.callback_query(TestCallbackData.filter())
 async def callback_query_handler(
-    callback_query: types.CallbackQuery, callback_data: TestCallbackData, state: FSMContext
+    callback_query: types.CallbackQuery, callback_data, state: FSMContext
 ) -> None:
     name = callback_data.name
-    await callback_query.message.answer(f"Hello, {name}")
+    await callback_query.message.answer(f"Hello, {name}") # type: ignore
 
 
 @dp.callback_query(States.state, TestCallbackData.filter())
@@ -67,4 +67,4 @@ async def foo_command_handler(m: types.Message, command: CommandObject):
 
 @dp.message()
 async def message_handler(message: types.Message, state: FSMContext) -> None:
-    await message.answer(message.text)
+    await message.answer(message.text) # type: ignore

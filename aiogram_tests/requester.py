@@ -34,6 +34,7 @@ class Calls:
         return tuple(res)
 
     def __getattr__(self, item):
+        print(dir(self), item, item in dir(self))
         if item in dir(self):
             return getattr(self, item)
         else:
@@ -51,7 +52,7 @@ class MockedBot:
         try:
             await self._handler(*args, **kwargs)
         except TypeError as e:
-            raise AttributeError("incorrect argument name. %s" % e)
+            raise AttributeError(f"incorrect argument name. {e}")
 
         requests = self._handler.bot.session.requests
         result = {}
@@ -93,5 +94,6 @@ class MockedBot:
 
     @staticmethod
     def _generate_result_obj(data: dict):
+        print(data)
         GeneratedCalls = type("GeneratedCalls", (Calls,), data)
         return GeneratedCalls()

@@ -67,7 +67,7 @@ def test_as_object_converting_with_nesting():
             id=12345678, is_bot=False, first_name="FirstName", last_name="LastName", username="username"
         ),
         chat=types.Chat(id=12345678, first_name="FirstName", last_name="LastName", username="username", type="private"),
-        date=1508709711,
+        date=1508709711, # type: ignore
         text="Hi, world!",
     )
 

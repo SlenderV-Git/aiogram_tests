@@ -1,13 +1,13 @@
 import pytest
 from aiogram.filters import Command
-from test_bot import callback_query_handler
-from test_bot import callback_query_handler_with_state
-from test_bot import command_handler
-from test_bot import message_handler
-from test_bot import message_handler_with_state
-from test_bot import message_handler_with_state_data
-from test_bot import States
-from test_bot import TestCallbackData
+from examples.bot import callback_query_handler
+from examples.bot import callback_query_handler_with_state
+from examples.bot import command_handler
+from examples.bot import message_handler
+from examples.bot import message_handler_with_state
+from examples.bot import message_handler_with_state_data
+from examples.bot import States
+from examples.bot import TestCallbackData
 
 from aiogram_tests import MockedBot
 from aiogram_tests.handler import CallbackQueryHandler
@@ -45,7 +45,7 @@ async def test_callback_query_handler():
     requester = MockedBot(CallbackQueryHandler(callback_query_handler, TestCallbackData.filter()))
 
     callback_query = CALLBACK_QUERY.as_object(
-        data=TestCallbackData(id=1, name="John").pack(), message=MESSAGE.as_object(text="Hello world!")
+        data=TestCallbackData(id=1, name="John").pack(), message=MESSAGE.as_object(text="Hello world!") # type: ignore
     )
     calls = await requester.query(callback_query)
 
@@ -53,7 +53,7 @@ async def test_callback_query_handler():
     assert answer_text == "Hello, John"
 
     callback_query = CALLBACK_QUERY.as_object(
-        data=TestCallbackData(id=1, name="Mike").pack(), message=MESSAGE.as_object(text="Hello world!")
+        data=TestCallbackData(id=1, name="Mike").pack(), message=MESSAGE.as_object(text="Hello world!") # type: ignore
     )
     calls = await requester.query(callback_query)
 
@@ -65,7 +65,7 @@ async def test_callback_query_handler():
 async def test_callback_query_handler_with_state():
     requester = MockedBot(CallbackQueryHandler(callback_query_handler_with_state, TestCallbackData.filter()))
 
-    callback_query = CALLBACK_QUERY.as_object(data=TestCallbackData(id=1, name="John").pack())
+    callback_query = CALLBACK_QUERY.as_object(data=TestCallbackData(id=1, name="John").pack()) # type: ignore
     calls = await requester.query(callback_query)
 
     answer_text = calls.answer_callback_query.fetchone().text

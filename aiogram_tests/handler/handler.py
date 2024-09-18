@@ -18,9 +18,9 @@ class TelegramEventObserverHandler(RequestHandler):
         callback: Callable,
         *filters: Filter,
         state: Union[State, str, None] = None,
-        state_data: Dict = None,
-        dp_middlewares: Iterable = None,
-        exclude_observer_methods: Iterable = None,
+        state_data: Dict = None, # type: ignore
+        dp_middlewares: Iterable = None, # type: ignore
+        exclude_observer_methods: Iterable = None, # type: ignore
         **kwargs,
     ):
         super().__init__(dp_middlewares, exclude_observer_methods, **kwargs)
@@ -73,9 +73,9 @@ class MessageHandler(TelegramEventObserverHandler):
         callback: Callable,
         *filters: Filter,
         state: Union[State, str, None] = None,
-        state_data: Dict = None,
-        dp_middlewares: Iterable = None,
-        exclude_observer_methods: Iterable = None,
+        state_data: Dict = None, # type: ignore
+        dp_middlewares: Iterable = None, # type: ignore
+        exclude_observer_methods: Iterable = None, # type: ignore
         **kwargs,
     ):
         super().__init__(
@@ -101,9 +101,9 @@ class CallbackQueryHandler(TelegramEventObserverHandler):
         callback: Callable,
         *filters: Filter,
         state: Union[State, str, None] = None,
-        state_data: Dict = None,
-        dp_middlewares: Iterable = None,
-        exclude_observer_methods: Iterable = None,
+        state_data: Dict = None, # type: ignore
+        dp_middlewares: Iterable = None, # type: ignore
+        exclude_observer_methods: Iterable = None, # type: ignore
         **kwargs,
     ):
         super().__init__(

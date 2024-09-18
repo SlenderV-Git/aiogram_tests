@@ -1,5 +1,5 @@
 from collections import deque
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator, Dict
 from typing import Deque
 from typing import Optional
 from typing import Type
@@ -12,14 +12,13 @@ from aiogram.methods.base import Request
 from aiogram.methods.base import Response
 from aiogram.methods.base import TelegramType
 from aiogram.types import ResponseParameters
-from aiogram.types import UNSET
 from aiogram.types import User
 
 
 class MockedSession(BaseSession):
     def __init__(self):
         super().__init__()
-        self.responses: Deque[Response[TelegramType]] = deque()
+        self.responses: Deque[Response] = deque()
         self.requests: Deque[Request] = deque()
         self.closed = True
 
@@ -37,16 +36,23 @@ class MockedSession(BaseSession):
         self.closed = True
 
     async def make_request(
-        self, bot: Bot, method: TelegramMethod[TelegramType], timeout: Optional[int] = UNSET
+        self, bot: Bot, method: TelegramMethod[TelegramType], timeout: Optional[int] = 30
     ) -> TelegramType:
         self.closed = False
-        self.requests.append(method.build_request(bot))
-        response: Response[TelegramType] = self.responses.pop()
-        self.check_response(method=method, status_code=response.error_code, content=response.json())
+        self.requests.append(Request(method=method.__class__.__name__, data= method.__dict__, files=None)) # type: ignore
+
+        response: Response[TelegramType] = bot.session.responses.pop() # type: ignore
+        
+        self.check_response(bot, method=method, status_code=response.error_code, content=response.model_dump_json()) # type: ignore
         return response.result  # type: ignore
 
     async def stream_content(
-        self, url: str, timeout: int, chunk_size: int
+        self, 
+        url: str, 
+        headers: Optional[Dict[str, Any]] = None, 
+        timeout: int = 30,
+        chunk_size: int = 65536,
+        raise_for_status: bool = True
     ) -> AsyncGenerator[bytes, None]:  # pragma: no cover
         yield b""
 
@@ -67,7 +73,7 @@ class MockedBot(Bot):
 
     def add_result_for(
         self,
-        method: Type[TelegramMethod[TelegramType]],
+        method: TelegramMethod[TelegramType],
         ok: bool,
         result: TelegramType = None,
         description: Optional[str] = None,
@@ -88,10 +94,10 @@ class MockedBot(Bot):
         self.session.add_result(response)
         return response
 
-    async def __call__(self, method: Type[TelegramMethod[TelegramType]], request_timeout: Optional[int] = None):
+    async def __call__(self, method: TelegramMethod[TelegramType], request_timeout: Optional[int] = None):
         if self.auto_mock_success:
-            self.add_result_for(method, ok=True)
-        return await super().__call__(method, request_timeout)
+            self.add_result_for(method, ok=True) # type: ignore
+        return await self.session.make_request(self, method, request_timeout)
 
-    def get_request(self) -> Request:
+    def get_request(self) -> Request | None:
         return self.session.get_request()

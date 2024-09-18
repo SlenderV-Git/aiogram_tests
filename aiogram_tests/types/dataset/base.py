@@ -14,7 +14,7 @@ class DatasetItem(Mapping):
         return self._data
 
     @property
-    def name(self) -> str:
+    def name(self) -> str | None:
         return self._name
 
     @property
@@ -55,7 +55,7 @@ class DatasetItem(Mapping):
                     if not isinstance(item, (DatasetItem, list)):
                         continue
 
-                    result_data[key][index] = self._recursive_as_object(item.data, item.model)
+                    result_data[key][index] = self._recursive_as_object(item.data, item.model) # type: ignore
 
         return model(**result_data)
 
