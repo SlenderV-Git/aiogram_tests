@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiogram = ">=3.0.0"
+aiogram = ">=3.13"
 pytest = "*"
 pytest-asyncio = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.11.9"
