@@ -24,7 +24,7 @@ class RequestHandler:
         self,
         dp_middlewares: Iterable[BaseMiddleware] = [],
         exclude_observer_methods: Iterable[str] = [],
-        auto_mock_success: bool = False,
+        auto_mock_success: bool = True,
         dp: Optional[Dispatcher] = None,
         **kwargs,
     ):

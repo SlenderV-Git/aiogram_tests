@@ -9,7 +9,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 
 class TestCallbackData(CallbackData, prefix="test_callback_data"):
-    pass
+    id : int
+    name : str
 
 dp = Dispatcher(storage=MemoryStorage())
 
